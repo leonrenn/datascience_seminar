@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Specific
+## Lightning
+ParameterizedNeuralNetwork/lightning_logs/*
