@@ -131,3 +131,6 @@ dmypy.json
 # Specific
 ## Lightning
 ParameterizedNeuralNetwork/lightning_logs/*
+ParameterizedNeuralNetwork/frames/*
+ParameterizedNeuralNetwork/NOTES.md
+
