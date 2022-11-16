@@ -2,14 +2,7 @@
 Results and insights collected from the data science seminar by Lukas Heinrich.
 
 ## ParameterizedNeuralNetwork
-_PNN_1d.ipynb_: Designing a Network that classifies depending on two hypothesis in 1 dimesnion.
-THe data is generated within 0 to 1 from gaussian distributions.
-Including data generation and training.
-<br><br>
-_PNN_2d.ipynb_: Designing a Network that classifies depending on two hypothesis in 2 dimesnion.
-THe data is generated within (0,0) and (1,1) from gaussian distributions with diagonal covariance matrix (0.2).
-Including data generation and training.
-<br><br>
-_tmp/*_: Includes the models (serialized) saved from the last training procedures.
-
+In ***High Energy Physics*** it is common that one has to decide if the data that is taken is from some specific signal ($H_{a}$) or from the background ($H_{0}$).<br>
+This is simple binary hypothesis testing. For big experiments and complicated processes the likelihood may not be known and therefore has to be learned. <br>
+Neural Network provide a very nice approach to this problem. In this case, a NN is trained on parameterized (means as hypothesis) on 1 and 2 dimesional data.
 
