@@ -36,7 +36,7 @@ class ParameterizedNeuralNet(pl.LightningModule):
         return self.net(x)
 
     def configure_optimizers(self):
-        optim  = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optim  = torch.optim.Adam(self.parameters())
         return optim
 
     def training_step(self, train_batch, batch_idx):
