@@ -133,4 +133,10 @@ dmypy.json
 ParameterizedNeuralNetwork/*D/lightning_logs/*
 ParameterizedNeuralNetwork/frames/*
 ParameterizedNeuralNetwork/NOTES.md
+GANs/*
+GANs/__pycache__/*
+GANs/.ipynb_checkpoints/*
+GANs/lightning_logs/*
+*ckpt
+*yaml
 .DS_Store
