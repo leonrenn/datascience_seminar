@@ -14,7 +14,8 @@ class Flow1d(pl.LightningModule):
         # class variable
         self.n_components = n_components
 
-        # distributions
+        # target distributions that is changed during learning 
+        # procedure (simples distribution)
         self.target_distribution = Uniform(0.0, 1.0)
 
         # infered paramters mu, sigma
@@ -26,8 +27,13 @@ class Flow1d(pl.LightningModule):
         # weights
         self.weight_logits = nn.Parameter(
             torch.ones(self.n_components), requires_grad=True)
+        
+        # loss
+        self.total_loss = []
+        self.epoch_end = False # only on epoch end
 
     def forward(self, x):
+        
         # reshaping the input
         x = x.view(-1, 1)
 
@@ -55,4 +61,11 @@ class Flow1d(pl.LightningModule):
 
         # evaluating the loss
         loss = self.loss_function(self.target_distribution, z, dz_by_dx)
+        if self.epoch_end == True:
+            self.total_loss.append(loss.item())
+            self.epoch_end = False
         return loss
+
+    def on_epoch_end(self):
+        self.epoch_end = True
+        return

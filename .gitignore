@@ -137,6 +137,8 @@ GANs/*
 GANs/__pycache__/*
 GANs/.ipynb_checkpoints/*
 GANs/lightning_logs/*
+NormalizingFlows/lightning_logs/*
+NormalizingFlows/.ipynb_checkpoints/*
 *ckpt
 *yaml
 .DS_Store
