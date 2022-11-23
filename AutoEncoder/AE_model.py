@@ -1,0 +1,73 @@
+import pytorch_lightning as pl
+import torch.nn as nn
+from torch.optim import Adam
+
+
+class AutoEncoder(pl.LightningModule):
+    def __init__(self, 
+                 latent_dimension,
+                 variable_space,
+                 steps):
+        super().__init__()
+
+        # class variables
+        self.latent_dimension = latent_dimension
+        self.variable_space = variable_space
+        self.steps = steps
+
+        # discrete steps on logarithmic scale
+        factor = (self.latent_dimension/self.variable_space)**(1/self.steps)
+        discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
+
+        # build network
+        encoder_list = []
+        decoder_list = []
+        for index, step in enumerate(discrete_steps):
+            if index != (self.steps - 1):
+                # encoder layers
+                encoder_list.append(nn.Linear(in_features=step,
+                                                out_features=discrete_steps[index+1]))
+                encoder_list.append(nn.PReLU())
+                # decoder layers
+                decoder_list.append(nn.Linear(in_features=discrete_steps[steps-1-index],
+                                                out_features=discrete_steps[steps - 2 - index]))
+                decoder_list.append(nn.PReLU())
+
+        # encoder structure
+        self.encoder = nn.Sequential(*encoder_list)
+
+        # decoder structure
+        # cut last activation function
+        decoder_list = decoder_list[:-1]
+        self.decoder = nn.Sequential(*decoder_list)
+
+        # total loss
+        self.total_loss = []
+
+        # criterion
+        self.criterion = nn.MSELoss(reduce=True, reduction="mean")
+
+
+    def forward(self, x):
+        encoded = self.encoder(x)
+        decoded = self.decoder(encoded)
+        return decoded
+
+    def configure_optimizers(self):
+        optim = Adam(self.parameters())
+        return optim
+    def training_step(self, batch, batch_idx):
+
+        # unpacking the batch
+        x = batch
+
+        # encode and decode via the model
+        z = self.decoder(self.encoder(x))
+
+        # compare via mse
+        loss = self.criterion(z, x)
+
+        # append loss to class variable
+        self.total_loss.append(loss.item())
+
+        return loss
