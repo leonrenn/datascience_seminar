@@ -1,4 +1,5 @@
 import pytorch_lightning as pl
+import torch
 import torch.nn as nn
 from torch.optim import Adam
 
@@ -17,22 +18,22 @@ class AutoEncoder(pl.LightningModule):
 
         # discrete steps on logarithmic scale
         factor = (self.latent_dimension/self.variable_space)**(1/self.steps)
-        discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
+        self.discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
         # enforce the network to have the right latent dimensions
-        discrete_steps[-1] = latent_dimension
+        self.discrete_steps[-1] = latent_dimension
 
         # build network
         encoder_list = []
         decoder_list = []
-        for index, step in enumerate(discrete_steps):
+        for index, step in enumerate(self.discrete_steps):
             if index != (self.steps - 1):
                 # encoder layers
                 encoder_list.append(nn.Linear(in_features=step,
-                                                out_features=discrete_steps[index+1]))
+                                                out_features=self.discrete_steps[index+1]))
                 encoder_list.append(nn.PReLU())
                 # decoder layers
-                decoder_list.append(nn.Linear(in_features=discrete_steps[steps-1-index],
-                                                out_features=discrete_steps[steps - 2 - index]))
+                decoder_list.append(nn.Linear(in_features=self.discrete_steps[steps-1-index],
+                                                out_features=self.discrete_steps[steps - 2 - index]))
                 decoder_list.append(nn.PReLU())
 
         # encoder structure
@@ -49,15 +50,18 @@ class AutoEncoder(pl.LightningModule):
         # criterion
         self.criterion = nn.MSELoss(reduction="mean")
 
-
     def forward(self, x):
+        # encoding
         encoded = self.encoder(x)
+
+        # decoding
         decoded = self.decoder(encoded)
         return decoded
 
     def configure_optimizers(self):
         optim = Adam(self.parameters())
         return optim
+
     def training_step(self, batch, batch_idx):
 
         # unpacking the batch
