@@ -18,6 +18,8 @@ class AutoEncoder(pl.LightningModule):
         # discrete steps on logarithmic scale
         factor = (self.latent_dimension/self.variable_space)**(1/self.steps)
         discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
+        # enforce the network to have the right latent dimensions
+        discrete_steps[-1] = latent_dimension
 
         # build network
         encoder_list = []
@@ -45,7 +47,7 @@ class AutoEncoder(pl.LightningModule):
         self.total_loss = []
 
         # criterion
-        self.criterion = nn.MSELoss(reduce=True, reduction="mean")
+        self.criterion = nn.MSELoss(reduction="mean")
 
 
     def forward(self, x):
@@ -65,9 +67,10 @@ class AutoEncoder(pl.LightningModule):
         z = self.decoder(self.encoder(x))
 
         # compare via mse
-        loss = self.criterion(z, x)
+        self.loss = self.criterion(z, x)
 
-        # append loss to class variable
-        self.total_loss.append(loss.item())
+        return self.loss
 
-        return loss
+    def on_epoch_end(self):
+        self.total_loss.append(self.loss.detach().numpy())
+        return 
