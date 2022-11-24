@@ -139,6 +139,9 @@ GANs/.ipynb_checkpoints/*
 GANs/lightning_logs/*
 NormalizingFlows/lightning_logs/*
 NormalizingFlows/.ipynb_checkpoints/*
+AutoEncoder/.ipynb_checkpoints/*
+AutoEncoder/lightning_logs/*
+AutoEncoder/frames/*
 *ckpt
 *yaml
 .DS_Store
