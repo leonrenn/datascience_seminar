@@ -9,3 +9,6 @@ Neural Network provide a very nice approach to this problem. In this case, a NN 
 ## NormalizingFlows
 In physics, it is often the case that the exact probability distribution to a problem might not be known (e.g., after complicated processes of particle scatterings). The pdf and the underlying transformation can both be learned by a NN. Because of keeping the density equal to unity this flow is called normalizing. This is shown via 1 dimensional data.
 Normalizing flows is a mehtod of unsupervied learning techniques in machine learning.
+
+## AutoEncoder
+AutoEncoder for 1 dimensional signals to observe the latent space and the dependence of the signals parameters and the change in the latent space.
