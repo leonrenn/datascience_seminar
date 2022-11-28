@@ -1,10 +1,9 @@
 import pytorch_lightning as pl
-import torch
 import torch.nn as nn
 from torch.optim import Adam
 
 
-class AutoEncoder(pl.LightningModule):
+class VanillaAutoEncoder(pl.LightningModule):
     def __init__(self, 
                  latent_dimension,
                  variable_space,
@@ -19,8 +18,7 @@ class AutoEncoder(pl.LightningModule):
         # discrete steps on logarithmic scale
         factor = (self.latent_dimension/self.variable_space)**(1/self.steps)
         self.discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
-        # enforce the network to have the right latent dimensions
-        self.discrete_steps[-1] = latent_dimension
+        
 
         # build network
         encoder_list = []
