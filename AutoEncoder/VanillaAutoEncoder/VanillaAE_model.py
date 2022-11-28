@@ -1,5 +1,6 @@
 import pytorch_lightning as pl
 import torch.nn as nn
+from torch import sigmoid
 from torch.optim import Adam
 
 
@@ -18,6 +19,8 @@ class VanillaAutoEncoder(pl.LightningModule):
         # discrete steps on logarithmic scale
         factor = (self.latent_dimension/self.variable_space)**(1/self.steps)
         self.discrete_steps = [int(self.variable_space * (factor)**(k)) for k in range(self.steps)]
+        # ensure last index to be number of latent variables
+        self.discrete_steps[-1] = self.latent_dimension
         
 
         # build network
@@ -76,3 +79,6 @@ class VanillaAutoEncoder(pl.LightningModule):
     def on_epoch_end(self):
         self.total_loss.append(self.loss.detach().numpy())
         return 
+
+    def encoding_latent_unity(self, x):
+        return sigmoid(self.encoder(x))
