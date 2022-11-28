@@ -75,9 +75,9 @@ class VariationalAutoEncoder(pl.LightningModule):
         epsilon = distributions.Normal(0,1).sample(sample_shape=mu.shape)
         
         # compute kullback-leibler-divergence (loss)
-        self.kullback_leibler_loss = (torch.exp(log_var)**2 + mu**2 - log_var -1/2).sum()
+        self.kullback_leibler_loss = -0.5 * (1 + log_var - mu**2 - torch.exp(log_var)).sum()
 
-        return mu + torch.exp(log_var/2) * epsilon
+        return mu + torch.exp(log_var) * epsilon
 
     def forward(self, x):
         # encoding and reparameterization

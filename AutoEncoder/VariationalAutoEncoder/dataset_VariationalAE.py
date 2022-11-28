@@ -25,7 +25,7 @@ class Dataset_1d(Dataset):
         # variable scale -> this should be true for training and of for 
         # visualization of the same data
         if random_scaling is True:
-            scales = torch.linspace(0.1, 2, 10) # scaling from 0.1 to 2
+            scales = torch.linspace(0.1, 1.0, 10) # scaling from 0.1 to 1
         else:
             scales = [random_scaling]
 
