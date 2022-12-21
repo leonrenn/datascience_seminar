@@ -147,7 +147,7 @@ Mining/*pdf
 Mining/.ipynb_checkpoints/*
 Mining/__pycache__/*
 Mining/lightning_logs/*
-Mining/frames/*
+Mining/frames
 *ckpt
 *yaml
 .DS_Store

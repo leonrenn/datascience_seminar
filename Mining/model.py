@@ -19,7 +19,7 @@ class Model(pl.LightningModule):
         # generate gif
         self.generate_gif = generate_gif
 
-        # total loss on epoch end    
+        # total loss on epoch end
         self.total_loss = []
         self.epoch_end = False
 
@@ -53,7 +53,8 @@ class Model(pl.LightningModule):
         targets, ratio = Y[:, :, 0].view(-1), Y[:, :, 1].view(-1).exp()
 
         # loss function
-        loss = 1/ratio.shape[0] * torch.sum(targets * (ratio - ratio_hat)**2 + targets * (1/ratio - 1/ratio_hat)**2)
+        loss = 1/ratio.shape[0] * torch.sum(targets * (
+            ratio - ratio_hat)**2 + targets * (1/ratio - 1/ratio_hat)**2)
         self.log("train_loss", loss)
 
         if self.epoch_end is True:
@@ -78,10 +79,13 @@ class Model(pl.LightningModule):
 
             output = self.net(X).detach().numpy()
 
-            true_log_ratio = Normal(loc=0, scale=1).log_prob(X[:, 0]) - Normal(loc=1, scale=1).log_prob(X[:, 0])
+            true_log_ratio = Normal(loc=0, scale=1).log_prob(
+                X[:, 0]) - Normal(loc=1, scale=1).log_prob(X[:, 0])
 
-            plt.plot(X[:, 0].detach().numpy(), output, "ro",label="Model Output")
-            plt.plot(X[:, 0].detach().numpy(), true_log_ratio.detach().numpy(), "b-",label="True Log Ratio")
+            plt.plot(X[:, 0].detach().numpy(), output,
+                     "ro", label="Model Output")
+            plt.plot(X[:, 0].detach().numpy(), true_log_ratio.detach(
+            ).numpy(), "b-", label="True Log Ratio")
             plt.legend()
             plt.xlabel("X")
             plt.ylabel("Log Likelihood Ratio")
@@ -90,14 +94,14 @@ class Model(pl.LightningModule):
             plt.ylim(y_min, y_max)
             plt.savefig(f"frames/train_epoch_{len(self.total_loss)}.png")
             plt.clf()
-        return 
+        return
 
     def on_train_end(self) -> None:
         if self.generate_gif is True:
-            frames = np.stack([iio.imread(f'frames/train_epoch_{epoch}.png') for epoch in range(len(self.total_loss))], axis=0)
+            frames = np.stack([iio.imread(f'frames/train_epoch_{epoch}.png')
+                               for epoch in range(len(self.total_loss))],
+                              axis=0)
             iio.imwrite('animations/ratio_training.gif', frames)
-            os.system("cd frames && rm -rf && cd ..")
+            os.system("cd frames && rm -rf  *.png && cd ..")
         print("GIF DONE")
-        return 
-
-    
+        return
